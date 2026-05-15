@@ -13,6 +13,9 @@ body {
 
 /* ─── LIGHT MODE VARIABLES ───────────────────────── */
 :root {
+    --version: "2.0";   /* ← add this line */
+  --primary: #7c5cff;
+  /* ... rest stays the same */
   --primary: #7c5cff;
   --primary-light: #efeaff;
   --primary-soft: rgba(124, 92, 255, 0.08);
