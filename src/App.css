@@ -931,3 +931,113 @@ textarea:focus { border-color: var(--primary); }
     -webkit-backdrop-filter: none !important;
   }
 }
+/* ════════════════════════════════════════════════════
+   MOBILE NUCLEAR FIXES — ensures layout works on phones
+════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* Force the whole dashboard to stack vertically */
+  .dashboard {
+    flex-direction: column !important;
+    gap: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Force sidebar OFF screen — never visible unless .open */
+  .sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: -100% !important;
+    width: 75vw !important;
+    max-width: 280px !important;
+    min-width: unset !important;
+    height: 100vh !important;
+    z-index: 999 !important;
+    border-radius: 0 20px 20px 0 !important;
+    overflow-y: auto !important;
+    transition: left 0.3s ease !important;
+  }
+
+  /* Show sidebar when open class is added */
+  .sidebar.open {
+    left: 0 !important;
+  }
+
+  /* Main content takes full width */
+  .main-content {
+    width: 100% !important;
+    min-width: unset !important;
+    padding: 12px !important;
+  }
+
+  /* Top card stacks vertically */
+  .top-card {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 14px !important;
+    padding: 16px !important;
+  }
+
+  /* Timer row on mobile */
+  .top-card-right {
+    width: 100% !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    background: var(--primary-soft) !important;
+    border-radius: 14px !important;
+    padding: 12px 16px !important;
+    gap: 12px !important;
+  }
+
+  .focus-label  { display: none !important; }
+  .top-timer    { font-size: 28px !important; }
+  .start-focus-btn { margin-top: 0 !important; font-size: 13px !important; padding: 10px 16px !important; }
+  .top-card-left h1 { font-size: 19px !important; }
+  .top-card-left p  { font-size: 13px !important; }
+
+  /* Show hamburger */
+  .hamburger-btn {
+    display: flex !important;
+    margin-bottom: 8px !important;
+  }
+
+  /* Dashboard grid → single column */
+  .main-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Overlay */
+  .sidebar-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(0,0,0,0.5) !important;
+    z-index: 998 !important;
+  }
+
+  /* Disable blur on mobile for performance */
+  .card, .top-card, .sidebar, .quote-card, .auth-card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Quote card compact */
+  .quote-card { padding: 12px 14px !important; }
+
+  /* Card padding reduce */
+  .card { padding: 16px !important; border-radius: 18px !important; }
+
+  /* Schedule form 1 col */
+  .schedule-form-grid  { grid-template-columns: 1fr !important; }
+  .deadline-form-grid  { grid-template-columns: 1fr !important; }
+
+  /* App padding */
+  .app { padding: 0 !important; }
+}
+
+@media (max-width: 480px) {
+  .top-timer  { font-size: 24px !important; }
+  .countdown-display { font-size: 52px !important; }
+  .focus-buttons { gap: 8px !important; }
+  .focus-buttons button { padding: 10px 18px !important; }
+}
