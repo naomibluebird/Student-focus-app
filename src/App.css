@@ -793,157 +793,34 @@ textarea:focus { border-color: var(--primary); }
   font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-/* ════════════════════════════════════════════════════
-   RESPONSIVE — TABLET (max 1100px)
-════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════
+   TABLET  (≤ 1100px)
+════════════════════════════════════════════════ */
 @media (max-width: 1100px) {
-  .sidebar { width: 200px; min-width: 200px; padding: 18px 12px; }
-  .schedule-form-grid { grid-template-columns: 1fr 1fr; }
-  .deadline-form-grid { grid-template-columns: 1fr 1fr; }
-  .top-card { padding: 22px 24px; }
-  .top-card-left h1 { font-size: 20px; }
-  .top-timer { font-size: 28px; }
+  .sidebar               { width: 200px; min-width: 200px; padding: 18px 12px; }
+  .schedule-form-grid    { grid-template-columns: 1fr 1fr; }
+  .deadline-form-grid    { grid-template-columns: 1fr 1fr; }
+  .top-card              { padding: 22px 24px; }
+  .top-card-left h1      { font-size: 20px; }
+  .top-timer             { font-size: 28px; }
 }
 
-/* ════════════════════════════════════════════════════
-   RESPONSIVE — MOBILE (max 768px)
-════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════
+   MOBILE  (≤ 768px)  — single source of truth
+════════════════════════════════════════════════ */
 @media (max-width: 768px) {
 
-  .app { padding: 12px; }
+  /* ── Layout ── */
+  .app          { padding: 0 !important; background: var(--bg-gradient); }
+  html, body    { overflow-x: hidden; }
 
-  .dashboard { flex-direction: column; gap: 12px; }
-
-  /* Hamburger shows on mobile */
-  .hamburger-btn {
-    display: flex;
-    align-items: center; justify-content: center;
-    background: var(--primary-soft);
-    border: none; border-radius: 10px;
-    padding: 8px; cursor: pointer;
-    color: var(--primary);
-    margin-bottom: 10px; flex-shrink: 0;
-    align-self: flex-start;
-    transition: background 0.2s;
-  }
-  .hamburger-btn:hover { background: var(--primary-light); }
-
-  /* ✅ FIX 5: Fixed mobile sidebar */
-  .sidebar {
-    position: fixed;
-    top: 0;
-    left: -100%;
-    width: 260px;
-    max-width: 85%;
-    height: 100vh;
-    min-height: 100vh;
-    z-index: 200;
-    border-radius: 0 var(--radius-xl) var(--radius-xl) 0;
-    padding: 22px 16px;
-    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow-y: auto;
-    min-width: unset;
-  }
-
-  .sidebar.open { left: 0; }
-
-  .sidebar-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    z-index: 199;
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-  }
-
-  /* Top card stacks */
-  .top-card {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px; padding: 18px;
-  }
-
-  .top-card-right {
-    width: 100%; flex-direction: row;
-    justify-content: space-between; align-items: center;
-    padding: 14px 16px;
-    background: var(--primary-soft);
-    border-radius: var(--radius-md);
-    gap: 12px;
-  }
-
-  .focus-label { display: none; }
-  .top-timer   { font-size: 26px; order: 1; }
-  .start-focus-btn { order: 2; margin-top: 0; padding: 10px 18px; font-size: 13px; }
-  .top-card-left h1 { font-size: 19px; }
-  .top-card-left p  { font-size: 13px; max-width: 100%; }
-
-  .quote-card  { padding: 12px 16px; }
-  .quote-text  { font-size: 13px; }
-
-  .main-grid { grid-template-columns: 1fr; }
-  .card      { padding: 18px; border-radius: 20px; }
-
-  .schedule-form-grid { grid-template-columns: 1fr 1fr; }
-  .deadline-form-grid { grid-template-columns: 1fr 1fr; }
-
-  .auth-card    { padding: 28px 22px; }
-  .auth-heading { font-size: 20px; }
-
-  .dl-priority-badge { display: none; }
-  .countdown-display { font-size: 64px; }
-  .focus-buttons button { padding: 12px 22px; font-size: 13.5px; }
-}
-
-/* ════════════════════════════════════════════════════
-   RESPONSIVE — SMALL MOBILE (max 480px)
-════════════════════════════════════════════════════ */
-@media (max-width: 480px) {
-  .app { padding: 8px; }
-  .schedule-form-grid  { grid-template-columns: 1fr; }
-  .deadline-form-grid  { grid-template-columns: 1fr; }
-  .countdown-display   { font-size: 56px; }
-  .top-card-left h1    { font-size: 17px; }
-  .deadline-row        { flex-wrap: wrap; gap: 8px; }
-  .dl-due-badge        { font-size: 10.5px; padding: 3px 8px; }
-  .auth-card           { padding: 24px 16px; }
-}
-
-/* ════════════════════════════════════════════════════
-   DESKTOP ONLY — hide mobile elements
-════════════════════════════════════════════════════ */
-@media (min-width: 769px) {
-  .hamburger-btn     { display: none; }
-  .sidebar-close-btn { display: none; }
-  .sidebar-overlay   { display: none; }
-}
-
-/* ════════════════════════════════════════════════════
-   ✅ FIX 9: MOBILE — disable blur entirely (huge perf boost)
-════════════════════════════════════════════════════ */
-@media (max-width: 768px) {
-  .sidebar,
-  .card,
-  .top-card,
-  .quote-card,
-  .auth-card {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
-}
-/* ════════════════════════════════════════════════════
-   MOBILE NUCLEAR FIXES — ensures layout works on phones
-════════════════════════════════════════════════════ */
-@media (max-width: 768px) {
-
-  /* Force the whole dashboard to stack vertically */
   .dashboard {
     flex-direction: column !important;
     gap: 0 !important;
     padding: 0 !important;
   }
 
-  /* Force sidebar OFF screen — never visible unless .open */
+  /* ── Sidebar: hidden off-screen by default ── */
   .sidebar {
     position: fixed !important;
     top: 0 !important;
@@ -956,21 +833,57 @@ textarea:focus { border-color: var(--primary); }
     border-radius: 0 20px 20px 0 !important;
     overflow-y: auto !important;
     transition: left 0.3s ease !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
   }
 
-  /* Show sidebar when open class is added */
-  .sidebar.open {
-    left: 0 !important;
+  .sidebar.open  { left: 0 !important; }
+
+  /* ── Overlay ── */
+  .sidebar-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    z-index: 998 !important;
+    backdrop-filter: none;
   }
 
-  /* Main content takes full width */
+  /* ── Show hamburger ── */
+  .hamburger-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-soft);
+    border: none;
+    border-radius: 10px;
+    padding: 8px;
+    cursor: pointer;
+    color: var(--primary);
+    margin-bottom: 10px;
+  }
+
+  /* ── Main content: full width ── */
   .main-content {
+    flex: none !important;
     width: 100% !important;
+    max-width: 100% !important;
     min-width: unset !important;
     padding: 12px !important;
+    gap: 12px !important;
+    display: flex;
+    flex-direction: column;
   }
 
-  /* Top card stacks vertically */
+  /* ── All cards: full width ── */
+  .top-card,
+  .quote-card,
+  .card {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* ── Top card: stack vertically ── */
   .top-card {
     flex-direction: column !important;
     align-items: flex-start !important;
@@ -978,7 +891,6 @@ textarea:focus { border-color: var(--primary); }
     padding: 16px !important;
   }
 
-  /* Timer row on mobile */
   .top-card-right {
     width: 100% !important;
     flex-direction: row !important;
@@ -990,54 +902,75 @@ textarea:focus { border-color: var(--primary); }
     gap: 12px !important;
   }
 
-  .focus-label  { display: none !important; }
-  .top-timer    { font-size: 28px !important; }
-  .start-focus-btn { margin-top: 0 !important; font-size: 13px !important; padding: 10px 16px !important; }
-  .top-card-left h1 { font-size: 19px !important; }
-  .top-card-left p  { font-size: 13px !important; }
+  .focus-label        { display: none !important; }
+  .top-timer          { font-size: 26px !important; }
+  .start-focus-btn    { margin-top: 0 !important; padding: 10px 16px !important; font-size: 13px !important; }
+  .top-card-left h1   { font-size: 18px !important; }
+  .top-card-left p    { font-size: 13px !important; max-width: 100% !important; }
 
-  /* Show hamburger */
-  .hamburger-btn {
-    display: flex !important;
-    margin-bottom: 8px !important;
-  }
+  /* ── Quote card ── */
+  .quote-card { padding: 12px 14px !important; }
+  .quote-text { font-size: 13px !important; }
 
-  /* Dashboard grid → single column */
+  /* ── Dashboard grid: single column ── */
   .main-grid {
     grid-template-columns: 1fr !important;
   }
 
-  /* Overlay */
-  .sidebar-overlay {
-    position: fixed !important;
-    inset: 0 !important;
-    background: rgba(0,0,0,0.5) !important;
-    z-index: 998 !important;
-  }
-
-  /* Disable blur on mobile for performance */
-  .card, .top-card, .sidebar, .quote-card, .auth-card {
+  /* ── Card padding ── */
+  .card {
+    padding: 16px !important;
+    border-radius: 18px !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
 
-  /* Quote card compact */
-  .quote-card { padding: 12px 14px !important; }
+  /* ── Forms: single column ── */
+  .schedule-form-grid { grid-template-columns: 1fr !important; }
+  .deadline-form-grid { grid-template-columns: 1fr !important; }
 
-  /* Card padding reduce */
-  .card { padding: 16px !important; border-radius: 18px !important; }
+  /* ── Weekly grid: vertical list on mobile ── */
+  .weekly-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    overflow-x: hidden !important;
+    gap: 8px !important;
+  }
 
-  /* Schedule form 1 col */
-  .schedule-form-grid  { grid-template-columns: 1fr !important; }
-  .deadline-form-grid  { grid-template-columns: 1fr !important; }
+  .day-column   { flex-direction: row !important; flex-wrap: wrap !important; gap: 6px !important; align-items: center; }
+  .day-header   { min-width: 50px !important; padding: 6px 8px !important; }
 
-  /* App padding */
-  .app { padding: 0 !important; }
+  /* ── Deadline row ── */
+  .dl-priority-badge  { display: none !important; }
+  .deadline-row       { flex-wrap: wrap !important; gap: 8px !important; }
+
+  /* ── Focus timer ── */
+  .countdown-display  { font-size: 64px !important; }
+  .focus-buttons button { padding: 12px 22px !important; }
+
+  /* ── Auth card ── */
+  .auth-card    { padding: 28px 20px !important; margin: 12px !important; }
+  .auth-heading { font-size: 20px !important; }
 }
 
+/* ════════════════════════════════════════════════
+   SMALL MOBILE  (≤ 480px)
+════════════════════════════════════════════════ */
 @media (max-width: 480px) {
-  .top-timer  { font-size: 24px !important; }
-  .countdown-display { font-size: 52px !important; }
-  .focus-buttons { gap: 8px !important; }
-  .focus-buttons button { padding: 10px 18px !important; }
+  .top-card-left h1   { font-size: 16px !important; }
+  .top-timer          { font-size: 22px !important; }
+  .countdown-display  { font-size: 52px !important; }
+  .focus-buttons      { gap: 8px !important; }
+  .focus-buttons button { padding: 10px 16px !important; font-size: 13px !important; }
+  .dl-due-badge       { font-size: 10.5px !important; padding: 3px 8px !important; }
+  .auth-card          { padding: 24px 16px !important; margin: 8px !important; }
+}
+
+/* ════════════════════════════════════════════════
+   DESKTOP ONLY — hide mobile-only elements
+════════════════════════════════════════════════ */
+@media (min-width: 769px) {
+  .hamburger-btn      { display: none !important; }
+  .sidebar-close-btn  { display: none !important; }
+  .sidebar-overlay    { display: none !important; }
 }
