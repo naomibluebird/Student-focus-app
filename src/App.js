@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-
 const QUOTES = [
   { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
   { text: "It always seems impossible until it's done.", author: "Nelson Mandela" },
