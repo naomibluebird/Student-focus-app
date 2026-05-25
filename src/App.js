@@ -1030,7 +1030,26 @@ function App() {
                 {Object.keys(weeklySchedule).map((day) => (
                   <div key={day} className="day-column">
                     <div className={`day-header ${day === today ? "is-today" : ""}`}><span className="day-abbr">{day.slice(0, 3)}</span>{day === today && <span className="today-dot" />}</div>
-                    {weeklySchedule[day].length === 0 ? <div className="empty-day">—</div> : ([...weeklySchedule[day]].sort((a, b) => a.time.localeCompare(b.time)).map((item) => (<div key={item.id} className="class-card" style={{ borderLeftColor: item.color || "#7c5cff" }}><div className="class-card-body"><span className="class-time-label">{item.time}{item.endTime ? ` – ${item.endTime}` : ""}</span><strong className="class-name">{item.name}</strong>{item.professor && <span className="class-meta">{item.professor}</span>}{item.room && <span className="class-meta class-room">{item.room}</span>}</div><button className="card-delete-btn" onClick={() => deleteSchedule(item.id, day)}>✕</button></div>)))}
+                    {weeklySchedule[day].length === 0 ? (
+                      <div className="empty-day">—</div>
+                    ) : (
+                      [...weeklySchedule[day]]
+                        .sort((a, b) => a.time.localeCompare(b.time))
+                        .map((item) => (
+                          <div key={item.id} className="class-card" style={{ borderLeftColor: item.color || "#7c5cff" }}>
+                            <div className="class-card-body">
+                              <span className="class-time-label">
+                                {item.time}
+                                {item.endTime ? ` – ${item.endTime}` : ""}
+                              </span>
+                              <strong className="class-name">{item.name}</strong>
+                              {item.professor && <span className="class-meta">{item.professor}</span>}
+                              {item.room && <span className="class-meta class-room">{item.room}</span>}
+                            </div>
+                            <button className="card-delete-btn" onClick={() => deleteSchedule(item.id, day)}>✕</button>
+                          </div>
+                        ))
+                    )}
                   </div>
                 ))}
               </div>
@@ -1116,48 +1135,143 @@ function App() {
         );
 
       default:
-        return (
-          <>
-            <div className="quote-card">
-              <svg className="quote-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M11.192 15.757c0-.88-.23-1.618-.69-2.217-.326-.412-.768-.683-1.327-.812-.55-.128-1.07-.137-1.54-.028-.16-.95.1-1.956.76-3.022.66-1.065 1.515-1.867 2.558-2.403L9.373 5c-.8.396-1.56.898-2.26 1.505-.71.607-1.34 1.305-1.9 2.094s-.98 1.68-1.25 2.69-.346 2.04-.217 3.1c.168 1.4.62 2.52 1.356 3.35.735.84 1.652 1.26 2.748 1.26.965 0 1.766-.29 2.4-.878.628-.576.94-1.365.94-2.368l.002.003zm9.124 0c0-.88-.23-1.618-.69-2.217-.326-.42-.77-.692-1.327-.817-.56-.124-1.074-.13-1.54-.022-.16-.94.09-1.95.75-3.02.66-1.066 1.514-1.867 2.557-2.404L18.48 5c-.8.396-1.56.898-2.26 1.505-.71.607-1.34 1.305-1.9 2.094s-.98 1.68-1.25 2.69-.346 2.04-.217 3.1c.168 1.4.62 2.52 1.356 3.35.735.84 1.652 1.26 2.748 1.26.965 0 1.766-.29 2.4-.878.628-.576.94-1.365.94-2.368l.002.003z"/></svg>
-              <div className="quote-text-wrap"><p className="quote-text">"{todayQuote.text}"</p><span className="quote-author">— {todayQuote.author}</span></div>
-            </div>
-
-            <div className="main-grid">
-              <div className="left-column">
-                <div className="card">
-                  <h3>✓ Today's Tasks</h3>
-                  <div className="task-list">
-                    {tasks.slice(0, 4).map((task) => (
-                      <div key={task.id} className={`task-item ${task.done ? "done" : ""} ${task.high ? "high-priority" : ""}`}>
-                        <input type="checkbox" checked={task.done} onChange={() => toggleTask(task.id)} />
-                        <span>{task.text}</span>
-                        {task.high && <span className="badge">HIGH</span>}
-                        <button className="task-delete-btn" onClick={() => deleteTask(task.id)}><TrashIcon /></button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="right-column">
-                <div className="card">
-                  <h3>📅 {today}'s Schedule</h3>
-                  <div className="schedule-timeline">
-                    {!weeklySchedule[today] || weeklySchedule[today].length === 0 ? (<p className="empty-msg">No classes today — add some in Schedule!</p>) : ([...weeklySchedule[today]].sort((a, b) => a.time.localeCompare(b.time)).map((item) => (<div key={item.id} className="timeline-item"><span className="timeline-time">{item.time}</span><div className="timeline-details" style={{ borderLeftColor: item.color || "#7c5cff" }}><strong>{item.name}</strong>{item.professor && <p>{item.room} • {item.professor}</p>}{!item.professor && item.room && <p>{item.room}</p>}</div></div>)))}
-                  </div>
-                </div>
-
-                <div className="card">
-                  <div className="deadlines-list-header"><h3 className="deadlines-title">UPCOMING DEADLINES</h3><button className="view-all-btn" onClick={() => setActivePage("deadlines")}>View all →</button></div>
-                  {upcomingDeadlines.length === 0 ? (<p className="empty-msg">No upcoming deadlines 🎉</p>) : (<div className="deadlines-grid-dashboard">{upcomingDeadlines.map((d) => { const { label, color } = getDueInfo(d.dueDate); return (<div key={d.id} className="deadline-chip"><span className="dot" style={{ background: d.color || color }}></span><div className="deadline-chip-info"><strong>{d.title}</strong><span style={{ color }}>{label}</span></div></div>); })}</div>)}
-                </div>
-              </div>
-            </div>
-          </>
-        );
+      }
     }
-  };
+  return (
+    <>
+      {/* Quote */}
+      <div className="quote-card">
+        <svg className="quote-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M11.192 15.757c0-.88-.23-1.618-.69-2.217-.326-.412-.768-.683-1.327-.812-.55-.128-1.07-.137-1.54-.028-.16-.95.1-1.956.76-3.022.66-1.065 1.515-1.867 2.558-2.403L9.373 5c-.8.396-1.56.898-2.26 1.505-.71.607-1.34 1.305-1.9 2.094s-.98 1.68-1.25 2.69-.346 2.04-.217 3.1c.168 1.4.62 2.52 1.356 3.35.735.84 1.652 1.26 2.748 1.26.965 0 1.766-.29 2.4-.878.628-.576.94-1.365.94-2.368l.002.003zm9.124 0c0-.88-.23-1.618-.69-2.217-.326-.42-.77-.692-1.327-.817-.56-.124-1.074-.13-1.54-.022-.16-.94.09-1.95.75-3.02.66-1.066 1.514-1.867 2.557-2.404L18.48 5c-.8.396-1.56.898-2.26 1.505-.71.607-1.34 1.305-1.9 2.094s-.98 1.68-1.25 2.69-.346 2.04-.217 3.1c.168 1.4.62 2.52 1.356 3.35.735.84 1.652 1.26 2.748 1.26.965 0 1.766-.29 2.4-.878.628-.576.94-1.365.94-2.368l.002.003z"/>
+        </svg>
+        <div className="quote-text-wrap">
+          <p className="quote-text">"{todayQuote.text}"</p>
+          <span className="quote-author">— {todayQuote.author}</span>
+        </div>
+      </div>
+
+      {/* ✅ Gamification Strip — moved from sidebar to here */}
+      <div className="stats-strip">
+        {/* Level + XP */}
+        <div className="stat-strip-card">
+          <div className="stat-strip-top">
+            <span className="stat-strip-badge" style={{ background: levelInfo.color }}>
+              Lv.{levelInfo.level}
+            </span>
+            <span className="stat-strip-title">{levelInfo.title}</span>
+          </div>
+          <div className="stat-strip-bar">
+            <div style={{ width: `${levelInfo.progressPercent}%`, background: levelInfo.color }}></div>
+          </div>
+          <span className="stat-strip-sub">{xp} XP · {levelInfo.xpToNext > 0 ? `${levelInfo.xpToNext} to next` : "Max!"}</span>
+        </div>
+
+        {/* Streak */}
+        <div className="stat-strip-card stat-strip-center">
+          <div className="stat-strip-big">🔥</div>
+          <div className="stat-strip-title">{streak} day streak</div>
+          <span className="stat-strip-sub">Keep it going!</span>
+        </div>
+
+        {/* Daily Challenge */}
+        <div className="stat-strip-card">
+          <div className="stat-strip-top">
+            <span className="stat-strip-emoji">🎯</span>
+            <span className="stat-strip-title">Daily Challenge</span>
+            {dailyChallenge.completed && <span className="challenge-done-badge">Done ✓</span>}
+          </div>
+          <p className="stat-strip-challenge-text">{dailyChallenge.text}</p>
+          <div className="stat-strip-bar">
+            <div style={{
+              width: `${Math.min((dailyChallenge.progress / dailyChallenge.requirement.count) * 100, 100)}%`,
+              background: dailyChallenge.completed ? "#10b981" : "#7c5cff"
+            }}></div>
+          </div>
+          <span className="stat-strip-sub">
+            {dailyChallenge.progress}/{dailyChallenge.requirement.count} · +{dailyChallenge.reward} XP
+          </span>
+        </div>
+
+        {/* Badges */}
+        <div className="stat-strip-card stat-strip-center"
+          style={{ cursor: "pointer" }}
+          onClick={() => setActivePage("achievements")}>
+          <div className="stat-strip-big">🏆</div>
+          <div className="stat-strip-title">{unlockedAchievements.length}/{ALL_ACHIEVEMENTS.length}</div>
+          <span className="stat-strip-sub">Badges earned</span>
+        </div>
+      </div>
+
+      {/* Dashboard grid — tasks + schedule + deadlines */}
+      <div className="main-grid">
+        <div className="left-column">
+          <div className="card">
+            <h3>✓ Today's Tasks</h3>
+            <div className="task-list">
+              {tasks.slice(0, 4).map((task) => (
+                <div key={task.id}
+                  className={`task-item ${task.done ? "done" : ""} ${task.high ? "high-priority" : ""}`}>
+                  <input type="checkbox" checked={task.done} onChange={() => toggleTask(task.id)} />
+                  <span>{task.text}</span>
+                  {task.high && <span className="badge">HIGH</span>}
+                  <button className="task-delete-btn" onClick={() => deleteTask(task.id)}><TrashIcon /></button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="right-column">
+          <div className="card">
+            <h3>📅 {today}'s Schedule</h3>
+            <div className="schedule-timeline">
+              {!weeklySchedule[today] || weeklySchedule[today].length === 0 ? (
+                <p className="empty-msg">No classes today — add some in Schedule!</p>
+              ) : (
+                [...weeklySchedule[today]]
+                  .sort((a, b) => a.time.localeCompare(b.time))
+                  .map((item) => (
+                    <div key={item.id} className="timeline-item">
+                      <span className="timeline-time">{item.time}</span>
+                      <div className="timeline-details" style={{ borderLeftColor: item.color || "#7c5cff" }}>
+                        <strong>{item.name}</strong>
+                        {item.professor && <p>{item.room} • {item.professor}</p>}
+                        {!item.professor && item.room && <p>{item.room}</p>}
+                      </div>
+                    </div>
+                  ))
+              )}
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="deadlines-list-header">
+              <h3 className="deadlines-title">UPCOMING DEADLINES</h3>
+              <button className="view-all-btn" onClick={() => setActivePage("deadlines")}>View all →</button>
+            </div>
+            {upcomingDeadlines.length === 0 ? (
+              <p className="empty-msg">No upcoming deadlines 🎉</p>
+            ) : (
+              <div className="deadlines-grid-dashboard">
+                {upcomingDeadlines.map((d) => {
+                  const { label, color } = getDueInfo(d.dueDate);
+                  return (
+                    <div key={d.id} className="deadline-chip">
+                      <span className="dot" style={{ background: d.color || color }}></span>
+                      <div className="deadline-chip-info">
+                        <strong>{d.title}</strong>
+                        <span style={{ color }}>{label}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </>
+  );
 
   return (
     <div className={`app ${darkMode ? "dark" : ""}`}>

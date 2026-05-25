@@ -1315,3 +1315,278 @@ textarea:focus { border-color: var(--primary); }
   color: #10b981;
   font-weight: 700;
 }
+/* ════════════════════════════════════════════════════
+   SIDEBAR — compact gamification
+════════════════════════════════════════════════════ */
+.user-level-inline {
+  font-size: 11px;
+  color: var(--text-light);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-stats-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+  padding: 10px;
+  background: var(--primary-soft);
+  border-radius: var(--radius-md);
+}
+
+.sidebar-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-align: center;
+  border-radius: 8px;
+  padding: 4px;
+  transition: background 0.2s;
+}
+
+.sidebar-stat:hover { background: var(--primary-light); }
+
+.sidebar-stat-icon { font-size: 16px; }
+
+.sidebar-stat-value {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-dark);
+  line-height: 1;
+}
+
+.sidebar-stat-label {
+  font-size: 9.5px;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+/* ════════════════════════════════════════════════════
+   GAMIFICATION STATS STRIP — dashboard
+════════════════════════════════════════════════════ */
+.stats-strip {
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr 1.6fr 0.8fr;
+  gap: 12px;
+}
+
+.stat-strip-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: transform 0.15s, background 0.2s;
+}
+
+.stat-strip-card:hover { transform: translateY(-2px); }
+
+.stat-strip-center { align-items: center; text-align: center; justify-content: center; }
+
+.stat-strip-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.stat-strip-badge {
+  font-size: 11px;
+  font-weight: 800;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 99px;
+  white-space: nowrap;
+}
+
+.stat-strip-emoji { font-size: 16px; }
+
+.stat-strip-big { font-size: 28px; line-height: 1; }
+
+.stat-strip-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-dark);
+  transition: color 0.2s;
+}
+
+.stat-strip-challenge-text {
+  font-size: 12px;
+  color: var(--text-mid);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.stat-strip-sub {
+  font-size: 11px;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.stat-strip-bar {
+  height: 5px;
+  background: var(--primary-light);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.stat-strip-bar div {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+
+.challenge-done-badge {
+  font-size: 10px;
+  font-weight: 700;
+  background: #e8fdf2;
+  color: #059669;
+  padding: 2px 7px;
+  border-radius: 99px;
+}
+
+.app.dark .challenge-done-badge {
+  background: rgba(16, 185, 129, 0.15);
+}
+
+/* ── XP Toast ── */
+.xp-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: var(--primary);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 14px;
+  z-index: 9999;
+  box-shadow: 0 4px 20px rgba(124, 92, 255, 0.4);
+  animation: slideInToast 0.3s ease;
+  max-width: 300px;
+}
+
+@keyframes slideInToast {
+  from { opacity: 0; transform: translateY(-10px) translateX(10px); }
+  to   { opacity: 1; transform: translateY(0) translateX(0); }
+}
+
+/* ── Onboarding extras ── */
+.step-indicator {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary);
+  background: var(--primary-light);
+  padding: 4px 12px;
+  border-radius: 99px;
+  display: inline-block;
+  margin-bottom: 16px;
+}
+
+.priority-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.priority-btn {
+  padding: 12px;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border);
+  background: var(--input-bg);
+  color: var(--text-dark);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  text-align: left;
+}
+
+.priority-btn:hover { border-color: var(--primary); background: var(--primary-soft); }
+.priority-btn.selected { border-color: var(--primary); background: var(--primary-light); color: var(--primary); font-weight: 700; }
+
+.hours-options {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.hours-btn {
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border);
+  background: var(--input-bg);
+  color: var(--text-dark);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.hours-btn:hover { border-color: var(--primary); }
+.hours-btn.selected { border-color: var(--primary); background: var(--primary-light); color: var(--primary); font-weight: 700; }
+
+.skip-btn {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--text-light);
+  font-size: 13.5px;
+  cursor: pointer;
+  padding: 8px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  margin-top: -8px;
+  transition: color 0.2s;
+}
+.skip-btn:hover { color: var(--text-mid); }
+
+/* ── Achievements grid ── */
+.achievements-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.achievement-card {
+  display: flex;
+  gap: 12px;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--task-bg);
+  transition: transform 0.15s, background 0.2s;
+}
+
+.achievement-card.unlocked { border-color: #10b981; background: rgba(16,185,129,0.07); }
+.achievement-card.locked   { opacity: 0.55; }
+.achievement-card:hover    { transform: translateY(-2px); }
+
+.achievement-icon { font-size: 24px; flex-shrink: 0; }
+
+.achievement-info { display: flex; flex-direction: column; gap: 3px; }
+
+.achievement-name   { font-size: 13px; font-weight: 700; color: var(--text-dark); }
+.achievement-desc   { font-size: 11.5px; color: var(--text-mid); line-height: 1.4; }
+.achievement-reward { font-size: 11px; color: var(--primary); font-weight: 600; }
+.achievement-unlocked { font-size: 11px; color: #10b981; font-weight: 700; }
+
+/* ── Stats strip responsive ── */
+@media (max-width: 1100px) {
+  .stats-strip { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+  .stats-strip { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
+  .stat-strip-card { padding: 12px !important; }
+  .achievements-grid { grid-template-columns: 1fr !important; }
+}
