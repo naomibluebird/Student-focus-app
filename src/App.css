@@ -977,3 +977,341 @@ textarea:focus { border-color: var(--primary); }
   .sidebar-close-btn  { display: none !important; }
   .sidebar-overlay    { display: none !important; }
 }
+
+/* Onboarding multi-step styles */
+.step-indicator {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #7c5cff;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.priority-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 16px 0 8px;
+}
+
+.priority-btn {
+  background: var(--task-bg);
+  border: 2px solid var(--border);
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+  color: var(--text-dark);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.priority-btn.selected {
+  border-color: #7c5cff;
+  background: rgba(124, 92, 255, 0.15);
+  color: #7c5cff;
+}
+
+.hours-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.hours-btn {
+  background: var(--task-bg);
+  border: 2px solid var(--border);
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text-dark);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  flex: 1;
+  min-width: 100px;
+}
+
+.hours-btn.selected {
+  border-color: #7c5cff;
+  background: rgba(124, 92, 255, 0.15);
+  color: #7c5cff;
+}
+
+.skip-btn {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 12px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 13px;
+  margin-top: 10px;
+  color: var(--text-mid);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  transition: all 0.2s;
+}
+
+.skip-btn:hover {
+  background: var(--task-bg);
+  border-color: #7c5cff;
+  color: #7c5cff;
+}
+
+.auth-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+/* Gamification Styles */
+.gamification-card {
+  background: var(--primary-soft);
+  border-radius: var(--radius-lg);
+  padding: 12px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.level-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 6px;
+}
+
+.level-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+}
+
+.xp-bar-container {
+  height: 6px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+.xp-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.3s ease;
+}
+
+.xp-text {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-mid);
+}
+
+.streak-badge {
+  font-size: 12px;
+  font-weight: 700;
+  color: #f59e0b;
+  margin-top: 6px;
+  padding: 4px;
+  background: rgba(245, 158, 11, 0.15);
+  border-radius: 8px;
+}
+
+.daily-goal-mini {
+  margin-top: 10px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-mid);
+}
+
+.daily-goal-bar {
+  height: 4px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.daily-goal-fill {
+  height: 100%;
+  background: #10b981;
+  border-radius: 99px;
+  transition: width 0.3s ease;
+}
+
+/* XP Toast Notification */
+.xp-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #7c5cff, #a07aff);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 99px;
+  font-weight: 600;
+  font-size: 13px;
+  z-index: 1000;
+  animation: slideIn 0.3s ease, fadeOut 0.3s ease 1.7s forwards;
+  box-shadow: 0 4px 15px rgba(124, 92, 255, 0.3);
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+/* Daily Challenge Card */
+.challenge-card {
+  background: linear-gradient(135deg, #7c5cff15, #a07aff10);
+  border-radius: var(--radius-lg);
+  padding: 12px;
+  margin-bottom: 16px;
+  border: 1px solid var(--border);
+}
+
+.challenge-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--primary);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.challenge-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+}
+
+.challenge-progress {
+  height: 6px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+  margin: 8px 0 4px;
+}
+
+.challenge-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #7c5cff, #a07aff);
+  border-radius: 99px;
+  transition: width 0.3s ease;
+}
+
+.challenge-stats {
+  font-size: 10px;
+  color: var(--text-light);
+  text-align: right;
+}
+
+.challenge-completed {
+  font-size: 11px;
+  color: #10b981;
+  font-weight: 600;
+  margin-top: 6px;
+  text-align: center;
+}
+
+/* Badges Link Button */
+.badges-link {
+  width: 100%;
+  background: var(--primary-soft);
+  border: none;
+  padding: 8px;
+  border-radius: var(--radius-md);
+  margin-top: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--primary);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.badges-link:hover {
+  background: var(--primary-light);
+}
+
+/* Achievements Page */
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.achievement-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  background: var(--task-bg);
+  transition: all 0.2s;
+}
+
+.achievement-card.unlocked {
+  border-left: 4px solid #f59e0b;
+  background: linear-gradient(90deg, var(--task-bg), var(--primary-soft));
+}
+
+.achievement-card.locked {
+  opacity: 0.5;
+}
+
+.achievement-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.achievement-info {
+  flex: 1;
+}
+
+.achievement-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 2px;
+}
+
+.achievement-desc {
+  font-size: 11px;
+  color: var(--text-light);
+  margin-bottom: 4px;
+}
+
+.achievement-reward {
+  font-size: 10px;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.achievement-unlocked {
+  font-size: 11px;
+  color: #10b981;
+  font-weight: 700;
+}
