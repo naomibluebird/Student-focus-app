@@ -207,6 +207,72 @@ function App() {
     };
   });
 
+  // ── Dark mode ────────────────────────────────────
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem("darkMode") === "true");
+  
+  // ── Weekly schedule ──────────────────────────────
+  const [weeklySchedule, setWeeklySchedule] = useState(() => {
+    const s = localStorage.getItem("weeklySchedule");
+    return s ? JSON.parse(s) : { Monday:[], Tuesday:[], Wednesday:[], Thursday:[], Friday:[], Saturday:[], Sunday:[] };
+  });
+
+  const [formDay, setFormDay] = useState(today);
+  const [className, setClassName] = useState("");
+  const [classTime, setClassTime] = useState("");
+  const [classEndTime, setClassEndTime] = useState("");
+  const [classRoom, setClassRoom] = useState("");
+  const [classProfessor, setClassProfessor] = useState("");
+  const [classColor, setClassColor] = useState("#7c5cff");
+  const colorOptions = ["#7c5cff","#3b82f6","#10b981","#f59e0b","#ec4899","#ef4444","#14b8a6"];
+
+  // ── Tasks ────────────────────────────────────────
+  const defaultTasks = [
+    { id: 1, text: "Read Chemistry Chapter 4", done: false },
+    { id: 2, text: "Draft Economics Essay Outline", done: false },
+    { id: 3, text: "Submit Lab Report Part 2", done: false, high: true },
+    { id: 4, text: "Review Calculus Notes", done: true },
+  ];
+  const [activePage, setActivePage] = useState("dashboard");
+  const [tasks, setTasks] = useState(() => {
+    const s = localStorage.getItem("studyTasks");
+    return s ? JSON.parse(s) : defaultTasks;
+  });
+  const [newTask, setNewTask] = useState("");
+
+  // ── Notes ────────────────────────────────────────
+  const [notes, setNotes] = useState(localStorage.getItem("studyNotes") || "");
+
+  // ── Focus timer ──────────────────────────────────
+  const [minutes, setMinutes] = useState(25);
+  const [seconds, setSeconds] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [sessionStartTime, setSessionStartTime] = useState(null);
+
+  // ── Deadlines ────────────────────────────────────
+  const defaultDeadlines = [
+    { id: 1, title: "History Term Paper", subject: "History", dueDate: new Date(Date.now() + 2 * 86400000).toISOString().split("T")[0], priority: "high", done: false, color: "#ef4444" },
+    { id: 2, title: "Math Quiz", subject: "Mathematics", dueDate: new Date(Date.now() + 5 * 86400000).toISOString().split("T")[0], priority: "medium", done: false, color: "#3b82f6" },
+  ];
+  const [deadlines, setDeadlines] = useState(() => {
+    const s = localStorage.getItem("studyDeadlines");
+    return s ? JSON.parse(s) : defaultDeadlines;
+  });
+
+  const [dlTitle, setDlTitle] = useState("");
+  const [dlSubject, setDlSubject] = useState("");
+  const [dlDate, setDlDate] = useState("");
+  const [dlPriority, setDlPriority] = useState("medium");
+  const [dlColor, setDlColor] = useState("#7c5cff");
+
+  // ── Effects ──────────────────────────────────────
+  useEffect(() => { localStorage.setItem("darkMode", darkMode); }, [darkMode]);
+  useEffect(() => { localStorage.setItem("weeklySchedule", JSON.stringify(weeklySchedule)); }, [weeklySchedule]);
+  useEffect(() => { localStorage.setItem("studyTasks", JSON.stringify(tasks)); }, [tasks]);
+  useEffect(() => { localStorage.setItem("studyNotes", notes); }, [notes]);
+  useEffect(() => { localStorage.setItem("studyDeadlines", JSON.stringify(deadlines)); }, [deadlines]);
+
   // Save daily challenge
   useEffect(() => {
     localStorage.setItem("dailyChallenge", JSON.stringify(dailyChallenge));
@@ -256,7 +322,47 @@ function App() {
     }
   }, []);
 
-  // Check and unlock achievements
+  // Focus timer effect
+  useEffect(() => {
+    let timer;
+    if (isRunning) {
+      timer = setInterval(() => {
+        if (seconds > 0) {
+          setSeconds((s) => s - 1);
+        } else if (minutes > 0) {
+          setMinutes((m) => m - 1);
+          setSeconds(59);
+        } else {
+          setIsRunning(false);
+          const totalMinutes = sessionStartTime ? 
+            Math.floor((Date.now() - sessionStartTime) / 60000) : 25;
+          const xpEarned = Math.floor(totalMinutes / 5) * 10;
+          if (xpEarned > 0) {
+            addXp(xpEarned, `Completed ${totalMinutes} min focus session! 🧠`);
+          }
+          // Update stats for focus sessions
+          setStats(prev => ({
+            ...prev,
+            totalFocusSessions: prev.totalFocusSessions + 1
+          }));
+          setFocusStreak(prev => prev + 1);
+          setSessionStartTime(null);
+          
+          // Update daily challenge
+          updateChallengeProgress("focusSession", 1);
+          updateChallengeProgress("focusMinutes", totalMinutes);
+          
+          if (!isMuted) {
+            const audio = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+            audio.play().catch(e => console.log("Audio play failed", e));
+          }
+        }
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [isRunning, minutes, seconds, isMuted, sessionStartTime]);
+
+  // ── Helper Functions ────────────────────────────
   const checkAndUnlockAchievement = (type, value) => {
     const newUnlocks = [];
     
@@ -308,7 +414,6 @@ function App() {
     }
   };
 
-  // Update daily challenge progress
   const updateChallengeProgress = (type, amount = 1) => {
     if (dailyChallenge.completed) return;
     if (dailyChallenge.requirement.type === type) {
@@ -574,114 +679,6 @@ function App() {
   const firstName = user ? user.name.split(" ")[0] : "";
   const levelInfo = getLevelInfo(xp);
 
-  // ── Dark mode ────────────────────────────────────
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(() => localStorage.getItem("darkMode") === "true");
-  useEffect(() => { localStorage.setItem("darkMode", darkMode); }, [darkMode]);
-
-  // ── Weekly schedule ──────────────────────────────
-  const [weeklySchedule, setWeeklySchedule] = useState(() => {
-    const s = localStorage.getItem("weeklySchedule");
-    return s ? JSON.parse(s) : { Monday:[], Tuesday:[], Wednesday:[], Thursday:[], Friday:[], Saturday:[], Sunday:[] };
-  });
-  useEffect(() => { localStorage.setItem("weeklySchedule", JSON.stringify(weeklySchedule)); }, [weeklySchedule]);
-
-  const [formDay, setFormDay] = useState(today);
-  const [className, setClassName] = useState("");
-  const [classTime, setClassTime] = useState("");
-  const [classEndTime, setClassEndTime] = useState("");
-  const [classRoom, setClassRoom] = useState("");
-  const [classProfessor, setClassProfessor] = useState("");
-  const [classColor, setClassColor] = useState("#7c5cff");
-  const colorOptions = ["#7c5cff","#3b82f6","#10b981","#f59e0b","#ec4899","#ef4444","#14b8a6"];
-
-  // ── Tasks ────────────────────────────────────────
-  const defaultTasks = [
-    { id: 1, text: "Read Chemistry Chapter 4", done: false },
-    { id: 2, text: "Draft Economics Essay Outline", done: false },
-    { id: 3, text: "Submit Lab Report Part 2", done: false, high: true },
-    { id: 4, text: "Review Calculus Notes", done: true },
-  ];
-  const [activePage, setActivePage] = useState("dashboard");
-  const [tasks, setTasks] = useState(() => {
-    const s = localStorage.getItem("studyTasks");
-    return s ? JSON.parse(s) : defaultTasks;
-  });
-  const [newTask, setNewTask] = useState("");
-  useEffect(() => { localStorage.setItem("studyTasks", JSON.stringify(tasks)); }, [tasks]);
-
-  // ── Notes ────────────────────────────────────────
-  const [notes, setNotes] = useState(localStorage.getItem("studyNotes") || "");
-  useEffect(() => { localStorage.setItem("studyNotes", notes); }, [notes]);
-
-  // ── Focus timer ──────────────────────────────────
-  const [minutes, setMinutes] = useState(25);
-  const [seconds, setSeconds] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const [sessionStartTime, setSessionStartTime] = useState(null);
-
-  useEffect(() => {
-    let timer;
-    if (isRunning) {
-      timer = setInterval(() => {
-        if (seconds > 0) {
-          setSeconds((s) => s - 1);
-        } else if (minutes > 0) {
-          setMinutes((m) => m - 1);
-          setSeconds(59);
-        } else {
-          setIsRunning(false);
-          const totalMinutes = sessionStartTime ? 
-            Math.floor((Date.now() - sessionStartTime) / 60000) : 25;
-          const xpEarned = Math.floor(totalMinutes / 5) * 10;
-          if (xpEarned > 0) {
-            addXp(xpEarned, `Completed ${totalMinutes} min focus session! 🧠`);
-          }
-          // Update stats for focus sessions
-          setStats(prev => ({
-            ...prev,
-            totalFocusSessions: prev.totalFocusSessions + 1
-          }));
-          setFocusStreak(prev => prev + 1);
-          setSessionStartTime(null);
-          
-          // Update daily challenge
-          updateChallengeProgress("focusSession", 1);
-          updateChallengeProgress("focusMinutes", totalMinutes);
-          
-          if (!isMuted) {
-            const audio = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
-            audio.play().catch(e => console.log("Audio play failed", e));
-          }
-        }
-      }, 1000);
-    }
-    return () => clearInterval(timer);
-  }, [isRunning, minutes, seconds, isMuted]);
-
-  const startFocusSession = () => {
-    setIsRunning(true);
-    setSessionStartTime(Date.now());
-  };
-
-  // ── Deadlines ────────────────────────────────────
-  const defaultDeadlines = [
-    { id: 1, title: "History Term Paper", subject: "History", dueDate: new Date(Date.now() + 2 * 86400000).toISOString().split("T")[0], priority: "high", done: false, color: "#ef4444" },
-    { id: 2, title: "Math Quiz", subject: "Mathematics", dueDate: new Date(Date.now() + 5 * 86400000).toISOString().split("T")[0], priority: "medium", done: false, color: "#3b82f6" },
-  ];
-  const [deadlines, setDeadlines] = useState(() => {
-    const s = localStorage.getItem("studyDeadlines");
-    return s ? JSON.parse(s) : defaultDeadlines;
-  });
-  useEffect(() => { localStorage.setItem("studyDeadlines", JSON.stringify(deadlines)); }, [deadlines]);
-
-  const [dlTitle, setDlTitle] = useState("");
-  const [dlSubject, setDlSubject] = useState("");
-  const [dlDate, setDlDate] = useState("");
-  const [dlPriority, setDlPriority] = useState("medium");
-  const [dlColor, setDlColor] = useState("#7c5cff");
-
   // ── Handlers with XP rewards ─────────────────────
   const toggleTask = (id) => {
     const task = tasks.find(t => t.id === id);
@@ -790,6 +787,11 @@ function App() {
   };
   
   const deleteDeadline = (id) => setDeadlines(deadlines.filter((d) => d.id !== id));
+
+  const startFocusSession = () => {
+    setIsRunning(true);
+    setSessionStartTime(Date.now());
+  };
 
   // ── Computed values ──────────────────────────────
   const completedTasks = tasks.filter((t) => t.done).length;
@@ -1134,144 +1136,138 @@ function App() {
           </div>
         );
 
-           default:
+      default:
         return (
           <>
-           
-      {/* Quote */}
-      <div className="quote-card">
-        <svg className="quote-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M11.192 15.757c0-.88-.23-1.618-.69-2.217-.326-.412-.768-.683-1.327-.812-.55-.128-1.07-.137-1.54-.028-.16-.95.1-1.956.76-3.022.66-1.065 1.515-1.867 2.558-2.403L9.373 5c-.8.396-1.56.898-2.26 1.505-.71.607-1.34 1.305-1.9 2.094s-.98 1.68-1.25 2.69-.346 2.04-.217 3.1c.168 1.4.62 2.52 1.356 3.35.735.84 1.652 1.26 2.748 1.26.965 0 1.766-.29 2.4-.878.628-.576.94-1.365.94-2.368l.002.003zm9.124 0c0-.88-.23-1.618-.69-2.217-.326-.42-.77-.692-1.327-.817-.56-.124-1.074-.13-1.54-.022-.16-.94.09-1.95.75-3.02.66-1.066 1.514-1.867 2.557-2.404L18.48 5c-.8.396-1.56.898-2.26 1.505-.71.607-1.34 1.305-1.9 2.094s-.98 1.68-1.25 2.69-.346 2.04-.217 3.1c.168 1.4.62 2.52 1.356 3.35.735.84 1.652 1.26 2.748 1.26.965 0 1.766-.29 2.4-.878.628-.576.94-1.365.94-2.368l.002.003z"/>
-        </svg>
-        <div className="quote-text-wrap">
-          <p className="quote-text">"{todayQuote.text}"</p>
-          <span className="quote-author">— {todayQuote.author}</span>
-        </div>
-      </div>
-
-      {/* ✅ Gamification Strip — moved from sidebar to here */}
-      <div className="stats-strip">
-        {/* Level + XP */}
-        <div className="stat-strip-card">
-          <div className="stat-strip-top">
-            <span className="stat-strip-badge" style={{ background: levelInfo.color }}>
-              Lv.{levelInfo.level}
-            </span>
-            <span className="stat-strip-title">{levelInfo.title}</span>
-          </div>
-          <div className="stat-strip-bar">
-            <div style={{ width: `${levelInfo.progressPercent}%`, background: levelInfo.color }}></div>
-          </div>
-          <span className="stat-strip-sub">{xp} XP · {levelInfo.xpToNext > 0 ? `${levelInfo.xpToNext} to next` : "Max!"}</span>
-        </div>
-
-        {/* Streak */}
-        <div className="stat-strip-card stat-strip-center">
-          <div className="stat-strip-big">🔥</div>
-          <div className="stat-strip-title">{streak} day streak</div>
-          <span className="stat-strip-sub">Keep it going!</span>
-        </div>
-
-        {/* Daily Challenge */}
-        <div className="stat-strip-card">
-          <div className="stat-strip-top">
-            <span className="stat-strip-emoji">🎯</span>
-            <span className="stat-strip-title">Daily Challenge</span>
-            {dailyChallenge.completed && <span className="challenge-done-badge">Done ✓</span>}
-          </div>
-          <p className="stat-strip-challenge-text">{dailyChallenge.text}</p>
-          <div className="stat-strip-bar">
-            <div style={{
-              width: `${Math.min((dailyChallenge.progress / dailyChallenge.requirement.count) * 100, 100)}%`,
-              background: dailyChallenge.completed ? "#10b981" : "#7c5cff"
-            }}></div>
-          </div>
-          <span className="stat-strip-sub">
-            {dailyChallenge.progress}/{dailyChallenge.requirement.count} · +{dailyChallenge.reward} XP
-          </span>
-        </div>
-
-        {/* Badges */}
-        <div className="stat-strip-card stat-strip-center"
-          style={{ cursor: "pointer" }}
-          onClick={() => setActivePage("achievements")}>
-          <div className="stat-strip-big">🏆</div>
-          <div className="stat-strip-title">{unlockedAchievements.length}/{ALL_ACHIEVEMENTS.length}</div>
-          <span className="stat-strip-sub">Badges earned</span>
-        </div>
-      </div>
-
-      {/* Dashboard grid — tasks + schedule + deadlines */}
-      <div className="main-grid">
-        <div className="left-column">
-          <div className="card">
-            <h3>✓ Today's Tasks</h3>
-            <div className="task-list">
-              {tasks.slice(0, 4).map((task) => (
-                <div key={task.id}
-                  className={`task-item ${task.done ? "done" : ""} ${task.high ? "high-priority" : ""}`}>
-                  <input type="checkbox" checked={task.done} onChange={() => toggleTask(task.id)} />
-                  <span>{task.text}</span>
-                  {task.high && <span className="badge">HIGH</span>}
-                  <button className="task-delete-btn" onClick={() => deleteTask(task.id)}><TrashIcon /></button>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="right-column">
-          <div className="card">
-            <h3>📅 {today}'s Schedule</h3>
-            <div className="schedule-timeline">
-              {!weeklySchedule[today] || weeklySchedule[today].length === 0 ? (
-                <p className="empty-msg">No classes today — add some in Schedule!</p>
-              ) : (
-                [...weeklySchedule[today]]
-                  .sort((a, b) => a.time.localeCompare(b.time))
-                  .map((item) => (
-                    <div key={item.id} className="timeline-item">
-                      <span className="timeline-time">{item.time}</span>
-                      <div className="timeline-details" style={{ borderLeftColor: item.color || "#7c5cff" }}>
-                        <strong>{item.name}</strong>
-                        {item.professor && <p>{item.room} • {item.professor}</p>}
-                        {!item.professor && item.room && <p>{item.room}</p>}
-                      </div>
-                    </div>
-                  ))
-              )}
-            </div>
-          </div>
-
-          <div className="card">
-            <div className="deadlines-list-header">
-              <h3 className="deadlines-title">UPCOMING DEADLINES</h3>
-              <button className="view-all-btn" onClick={() => setActivePage("deadlines")}>View all →</button>
-            </div>
-            {upcomingDeadlines.length === 0 ? (
-              <p className="empty-msg">No upcoming deadlines 🎉</p>
-            ) : (
-              <div className="deadlines-grid-dashboard">
-                {upcomingDeadlines.map((d) => {
-                  const { label, color } = getDueInfo(d.dueDate);
-                  return (
-                    <div key={d.id} className="deadline-chip">
-                      <span className="dot" style={{ background: d.color || color }}></span>
-                      <div className="deadline-chip-info">
-                        <strong>{d.title}</strong>
-                        <span style={{ color }}>{label}</span>
-                      </div>
-                    </div>
-                  );
-                })}
+            {/* Quote */}
+            <div className="quote-card">
+              <svg className="quote-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11.192 15.757c0-.88-.23-1.618-.69-2.217-.326-.412-.768-.683-1.327-.812-.55-.128-1.07-.137-1.54-.028-.16-.95.1-1.956.76-3.022.66-1.065 1.515-1.867 2.558-2.403L9.373 5c-.8.396-1.56.898-2.26 1.505-.71.607-1.34 1.305-1.9 2.094s-.98 1.68-1.25 2.69-.346 2.04-.217 3.1c.168 1.4.62 2.52 1.356 3.35.735.84 1.652 1.26 2.748 1.26.965 0 1.766-.29 2.4-.878.628-.576.94-1.365.94-2.368l.002.003zm9.124 0c0-.88-.23-1.618-.69-2.217-.326-.42-.77-.692-1.327-.817-.56-.124-1.074-.13-1.54-.022-.16-.94.09-1.95.75-3.02.66-1.066 1.514-1.867 2.557-2.404L18.48 5c-.8.396-1.56.898-2.26 1.505-.71.607-1.34 1.305-1.9 2.094s-.98 1.68-1.25 2.69-.346 2.04-.217 3.1c.168 1.4.62 2.52 1.356 3.35.735.84 1.652 1.26 2.748 1.26.965 0 1.766-.29 2.4-.878.628-.576.94-1.365.94-2.368l.002.003z"/>
+              </svg>
+              <div className="quote-text-wrap">
+                <p className="quote-text">"{todayQuote.text}"</p>
+                <span className="quote-author">— {todayQuote.author}</span>
               </div>
-            )}
-          </div>
-        </div>
-      </div>
-              </>
-        );
+            </div>
 
+            {/* Gamification Strip */}
+            <div className="stats-strip">
+              <div className="stat-strip-card">
+                <div className="stat-strip-top">
+                  <span className="stat-strip-badge" style={{ background: levelInfo.color }}>
+                    Lv.{levelInfo.level}
+                  </span>
+                  <span className="stat-strip-title">{levelInfo.title}</span>
+                </div>
+                <div className="stat-strip-bar">
+                  <div style={{ width: `${levelInfo.progressPercent}%`, background: levelInfo.color }}></div>
+                </div>
+                <span className="stat-strip-sub">{xp} XP · {levelInfo.xpToNext > 0 ? `${levelInfo.xpToNext} to next` : "Max!"}</span>
+              </div>
+
+              <div className="stat-strip-card stat-strip-center">
+                <div className="stat-strip-big">🔥</div>
+                <div className="stat-strip-title">{streak} day streak</div>
+                <span className="stat-strip-sub">Keep it going!</span>
+              </div>
+
+              <div className="stat-strip-card">
+                <div className="stat-strip-top">
+                  <span className="stat-strip-emoji">🎯</span>
+                  <span className="stat-strip-title">Daily Challenge</span>
+                  {dailyChallenge.completed && <span className="challenge-done-badge">Done ✓</span>}
+                </div>
+                <p className="stat-strip-challenge-text">{dailyChallenge.text}</p>
+                <div className="stat-strip-bar">
+                  <div style={{
+                    width: `${Math.min((dailyChallenge.progress / dailyChallenge.requirement.count) * 100, 100)}%`,
+                    background: dailyChallenge.completed ? "#10b981" : "#7c5cff"
+                  }}></div>
+                </div>
+                <span className="stat-strip-sub">
+                  {dailyChallenge.progress}/{dailyChallenge.requirement.count} · +{dailyChallenge.reward} XP
+                </span>
+              </div>
+
+              <div className="stat-strip-card stat-strip-center"
+                style={{ cursor: "pointer" }}
+                onClick={() => setActivePage("achievements")}>
+                <div className="stat-strip-big">🏆</div>
+                <div className="stat-strip-title">{unlockedAchievements.length}/{ALL_ACHIEVEMENTS.length}</div>
+                <span className="stat-strip-sub">Badges earned</span>
+              </div>
+            </div>
+
+            {/* Dashboard grid */}
+            <div className="main-grid">
+              <div className="left-column">
+                <div className="card">
+                  <h3>✓ Today's Tasks</h3>
+                  <div className="task-list">
+                    {tasks.slice(0, 4).map((task) => (
+                      <div key={task.id}
+                        className={`task-item ${task.done ? "done" : ""} ${task.high ? "high-priority" : ""}`}>
+                        <input type="checkbox" checked={task.done} onChange={() => toggleTask(task.id)} />
+                        <span>{task.text}</span>
+                        {task.high && <span className="badge">HIGH</span>}
+                        <button className="task-delete-btn" onClick={() => deleteTask(task.id)}><TrashIcon /></button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="right-column">
+                <div className="card">
+                  <h3>📅 {today}'s Schedule</h3>
+                  <div className="schedule-timeline">
+                    {!weeklySchedule[today] || weeklySchedule[today].length === 0 ? (
+                      <p className="empty-msg">No classes today — add some in Schedule!</p>
+                    ) : (
+                      [...weeklySchedule[today]]
+                        .sort((a, b) => a.time.localeCompare(b.time))
+                        .map((item) => (
+                          <div key={item.id} className="timeline-item">
+                            <span className="timeline-time">{item.time}</span>
+                            <div className="timeline-details" style={{ borderLeftColor: item.color || "#7c5cff" }}>
+                              <strong>{item.name}</strong>
+                              {item.professor && <p>{item.room} • {item.professor}</p>}
+                              {!item.professor && item.room && <p>{item.room}</p>}
+                            </div>
+                          </div>
+                        ))
+                    )}
+                  </div>
+                </div>
+
+                <div className="card">
+                  <div className="deadlines-list-header">
+                    <h3 className="deadlines-title">UPCOMING DEADLINES</h3>
+                    <button className="view-all-btn" onClick={() => setActivePage("deadlines")}>View all →</button>
+                  </div>
+                  {upcomingDeadlines.length === 0 ? (
+                    <p className="empty-msg">No upcoming deadlines 🎉</p>
+                  ) : (
+                    <div className="deadlines-grid-dashboard">
+                      {upcomingDeadlines.map((d) => {
+                        const { label, color } = getDueInfo(d.dueDate);
+                        return (
+                          <div key={d.id} className="deadline-chip">
+                            <span className="dot" style={{ background: d.color || color }}></span>
+                            <div className="deadline-chip-info">
+                              <strong>{d.title}</strong>
+                              <span style={{ color }}>{label}</span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </>
+        );
     }
   };
 
@@ -1285,7 +1281,6 @@ function App() {
           <div className="sidebar-overlay" onClick={() => setMenuOpen(false)} />
         )}
 
-        {/* ✅ ONE clean aside — no nesting */}
         <aside className={`sidebar ${menuOpen ? "open" : ""}`}>
           <div>
             <div className="sidebar-top">
@@ -1450,7 +1445,6 @@ function App() {
           </div>
           {renderPage()}
         </main>
-
       </div>
     </div>
   );

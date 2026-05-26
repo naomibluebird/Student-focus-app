@@ -13,20 +13,13 @@ body {
 
 /* ─── LIGHT MODE VARIABLES ───────────────────────── */
 :root {
-    --version: "2.0";   /* ← add this line */
-  --primary: #7c5cff;
-  /* ... rest stays the same */
+  --version: "2.0";
   --primary: #7c5cff;
   --primary-light: #efeaff;
   --primary-soft: rgba(124, 92, 255, 0.08);
   --bg-gradient: linear-gradient(135deg, #fff8e7 0%, #f0ebff 35%, #e8fdf2 70%, #fce8ff 100%);
-
-  /* ✅ FIX 4: Less transparency = less rendering cost */
   --card-bg: rgba(255, 255, 255, 0.92);
-
-  /* ✅ FIX 3: Softer shadow, less rendering load */
   --card-shadow: 0 4px 12px rgba(100, 80, 200, 0.08);
-
   --border: rgba(200, 190, 240, 0.4);
   --text-dark: #1a1728;
   --text-mid: #6b6880;
@@ -43,13 +36,8 @@ body {
 /* ─── DARK MODE VARIABLES ────────────────────────── */
 .app.dark {
   --bg-gradient: linear-gradient(135deg, #13111e 0%, #1a1728 40%, #111820 70%, #1a1120 100%);
-
-  /* ✅ FIX 4: Higher opacity = cheaper rendering */
   --card-bg: rgba(30, 26, 46, 0.95);
-
-  /* ✅ FIX 3: Softer dark shadow */
   --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
-
   --border: rgba(100, 90, 160, 0.25);
   --text-dark: #e8e4ff;
   --text-mid: #9490b0;
@@ -72,7 +60,6 @@ body {
   min-height: 100vh;
   padding: 20px;
   background: var(--bg-gradient);
-  /* ✅ FIX 8: Shortened transition */
   transition: background 0.2s;
 }
 
@@ -97,7 +84,6 @@ body {
 
 .auth-card {
   background: var(--card-bg);
-  /* ✅ FIX 2: Reduced blur value */
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--border);
@@ -119,7 +105,6 @@ body {
   font-size: 20px;
   font-weight: 800;
   color: var(--text-dark);
-  /* ✅ FIX 8: Shortened */
   transition: color 0.2s;
 }
 
@@ -180,7 +165,6 @@ body {
   outline: none;
   background: var(--input-bg);
   color: var(--text-dark);
-  /* ✅ FIX 8: Shortened */
   transition: border-color 0.2s, background 0.2s;
   width: 100%;
 }
@@ -258,7 +242,6 @@ body {
   width: 228px;
   min-width: 228px;
   background: var(--card-bg);
-  /* ✅ FIX 2: Reduced blur */
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   border: 1px solid var(--border);
@@ -269,7 +252,6 @@ body {
   justify-content: space-between;
   min-height: calc(100vh - 40px);
   box-shadow: var(--card-shadow);
-  /* ✅ FIX 8: Shortened */
   transition: background 0.2s, border-color 0.2s;
 }
 
@@ -341,7 +323,6 @@ nav button {
   cursor: pointer; text-align: left;
   font-size: 13.5px; font-weight: 500; color: var(--text-mid);
   display: flex; align-items: center; gap: 10px;
-  /* ✅ FIX 8: Shortened */
   transition: background 0.2s, color 0.2s;
   width: 100%;
 }
@@ -404,14 +385,12 @@ nav button.active svg { opacity: 1; }
 /* ─── TOP CARD ─────────────────────────────────── */
 .top-card {
   background: var(--card-bg);
-  /* ✅ FIX 2: Reduced blur */
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   border: 1px solid var(--border);
   padding: 26px 30px; border-radius: var(--radius-xl);
   display: flex; align-items: center; justify-content: space-between;
   box-shadow: var(--card-shadow); gap: 20px;
-  /* ✅ FIX 8: Shortened */
   transition: background 0.2s, border-color 0.2s;
 }
 
@@ -439,7 +418,6 @@ nav button.active svg { opacity: 1; }
 /* Quote of the day */
 .quote-card {
   background: var(--card-bg);
-  /* ✅ FIX 2: Reduced blur */
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   border: 1px solid var(--border); border-left: 4px solid var(--primary);
@@ -463,7 +441,6 @@ nav button.active svg { opacity: 1; }
 ════════════════════════════════════════════════════ */
 .card {
   background: var(--card-bg);
-  /* ✅ FIX 2: Reduced blur */
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   border: 1px solid var(--border); padding: 22px;
@@ -483,7 +460,6 @@ nav button.active svg { opacity: 1; }
   border: 1px solid var(--border);
   font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13.5px;
   outline: none; background: var(--input-bg); color: var(--text-dark);
-  /* ✅ FIX 8: Shortened */
   transition: border-color 0.2s, background 0.2s;
 }
 .task-input input:focus { border-color: var(--primary); }
@@ -570,7 +546,6 @@ nav button.active svg { opacity: 1; }
   border: 1px solid var(--border);
   font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13.5px;
   outline: none; background: var(--input-bg); color: var(--text-dark);
-  /* ✅ FIX 8: Shortened */
   transition: border-color 0.2s, background 0.2s;
 }
 .form-group input:focus,
@@ -1069,6 +1044,7 @@ textarea:focus { border-color: var(--primary); }
   cursor: not-allowed;
   transform: none;
 }
+
 /* Gamification Styles */
 .gamification-card {
   background: var(--primary-soft);
@@ -1181,6 +1157,7 @@ textarea:focus { border-color: var(--primary); }
     transform: translateX(100%);
   }
 }
+
 /* Daily Challenge Card */
 .challenge-card {
   background: linear-gradient(135deg, #7c5cff15, #a07aff10);
@@ -1315,6 +1292,7 @@ textarea:focus { border-color: var(--primary); }
   color: #10b981;
   font-weight: 700;
 }
+
 /* ════════════════════════════════════════════════════
    SIDEBAR — compact gamification
 ════════════════════════════════════════════════════ */
@@ -1590,37 +1568,3 @@ textarea:focus { border-color: var(--primary); }
   .stat-strip-card { padding: 12px !important; }
   .achievements-grid { grid-template-columns: 1fr !important; }
 }
-.user-level-inline {
-  font-size: 11px;
-  color: var(--text-light);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.sidebar-stats-row {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 14px;
-  padding: 10px;
-  background: var(--primary-soft);
-  border-radius: var(--radius-md);
-}
-
-.sidebar-stat {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  text-align: center;
-  padding: 4px;
-  border-radius: 8px;
-  cursor: default;
-  transition: background 0.2s;
-}
-
-.sidebar-stat:hover { background: var(--primary-light); }
-.sidebar-stat-icon  { font-size: 16px; }
-.sidebar-stat-value { font-size: 14px; font-weight: 800; color: var(--text-dark); line-height: 1; }
-.sidebar-stat-label { font-size: 9.5px; color: var(--text-light); font-weight: 500; }
