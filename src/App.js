@@ -801,9 +801,7 @@ function App() {
     .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
     .slice(0, 4);
   
-  const dailyGoalProgress = dailyGoal.date === new Date().toDateString() 
-    ? (dailyGoal.completed / dailyGoal.target) * 100 
-    : 0;
+
 
   // Achievement icons mapping
   const getAchievementIcon = (id) => {
