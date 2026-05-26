@@ -1273,70 +1273,182 @@ function App() {
     </>
   );
 
-  return (
+    return (
     <div className={`app ${darkMode ? "dark" : ""}`}>
-      {showXpToast && (<div className="xp-toast">✨ +{showXpToast.amount} XP {showXpToast.reason}</div>)}
+      {showXpToast && (
+        <div className="xp-toast">✨ +{showXpToast.amount} XP {showXpToast.reason}</div>
+      )}
       <div className="dashboard">
-        {menuOpen && (<div className="sidebar-overlay" onClick={() => setMenuOpen(false)} />)}
+        {menuOpen && (
+          <div className="sidebar-overlay" onClick={() => setMenuOpen(false)} />
+        )}
+
+        {/* ✅ ONE clean aside — no nesting */}
         <aside className={`sidebar ${menuOpen ? "open" : ""}`}>
           <div>
             <div className="sidebar-top">
-              <div className="logo"><div className="logo-box">S</div><h2>StudyBloom</h2></div>
-              <button className="sidebar-close-btn" onClick={() => setMenuOpen(false)}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-            </div>
-
-            {/* Daily Challenge Card */}
-            <div className="challenge-card">
-              <div className="challenge-title">🎯 Daily Challenge</div>
-              <div className="challenge-text">{dailyChallenge.text}</div>
-              <div className="challenge-progress">
-                <div className="challenge-progress-bar" style={{ width: `${(dailyChallenge.progress / dailyChallenge.requirement.count) * 100}%` }}></div>
+              <div className="logo">
+                <div className="logo-box">S</div>
+                <h2>StudyBloom</h2>
               </div>
-              <div className="challenge-stats">{dailyChallenge.progress} / {dailyChallenge.requirement.count}</div>
-              {dailyChallenge.completed && <div className="challenge-completed">✓ Completed! +{dailyChallenge.reward} XP</div>}
-            </div>
-
-            {/* Gamification Card */}
-            <div className="gamification-card">
-              <div className="level-badge" style={{ background: levelInfo.color }}>Lv.{levelInfo.level}</div>
-              <div className="level-title">{levelInfo.title}</div>
-              <div className="xp-bar-container"><div className="xp-bar-fill" style={{ width: `${levelInfo.progressPercent}%`, background: levelInfo.color }}></div></div>
-              <div className="xp-text">{xp} XP</div>
-              <div className="streak-badge">🔥 {streak} day streak</div>
-              <div className="daily-goal-mini"><span>Daily Goal: {dailyGoal.completed}/{dailyGoal.target} tasks</span><div className="daily-goal-bar"><div className="daily-goal-fill" style={{ width: `${dailyGoalProgress}%` }}></div></div></div>
-              <button className="badges-link" onClick={() => setActivePage("achievements")}>🏆 View All Badges ({unlockedAchievements.length}/{ALL_ACHIEVEMENTS.length})</button>
+              <button className="sidebar-close-btn" onClick={() => setMenuOpen(false)}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
             </div>
 
             <div className="user-chip">
-              <div className="user-avatar">{firstName.charAt(0).toUpperCase()}</div>
-              <div className="user-info"><span className="user-name">{user.name}</span><span className="user-email">{user.email}</span></div>
+              <div className="user-avatar" style={{ background: levelInfo.color }}>
+                {firstName.charAt(0).toUpperCase()}
+              </div>
+              <div className="user-info">
+                <span className="user-name">{user.name}</span>
+                <span className="user-level-inline">{levelInfo.title} · {xp} XP</span>
+              </div>
+            </div>
+
+            <div className="sidebar-stats-row">
+              <div className="sidebar-stat">
+                <span className="sidebar-stat-icon">🔥</span>
+                <div>
+                  <div className="sidebar-stat-value">{streak}</div>
+                  <div className="sidebar-stat-label">Streak</div>
+                </div>
+              </div>
+              <div className="sidebar-stat">
+                <span className="sidebar-stat-icon">🎯</span>
+                <div>
+                  <div className="sidebar-stat-value">{dailyGoal.completed}/{dailyGoal.target}</div>
+                  <div className="sidebar-stat-label">Goal</div>
+                </div>
+              </div>
+              <div className="sidebar-stat" style={{ cursor: "pointer" }}
+                onClick={() => { setActivePage("achievements"); setMenuOpen(false); }}>
+                <span className="sidebar-stat-icon">🏆</span>
+                <div>
+                  <div className="sidebar-stat-value">{unlockedAchievements.length}</div>
+                  <div className="sidebar-stat-label">Badges</div>
+                </div>
+              </div>
             </div>
 
             <nav>
-              <button className={activePage === "dashboard" ? "active" : ""} onClick={() => { setActivePage("dashboard"); setMenuOpen(false); }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</button>
-              <button className={activePage === "tasks" ? "active" : ""} onClick={() => { setActivePage("tasks"); setMenuOpen(false); }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Task Manager</button>
-              <button className={activePage === "schedule" ? "active" : ""} onClick={() => { setActivePage("schedule"); setMenuOpen(false); }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Schedule</button>
-              <button className={activePage === "deadlines" ? "active" : ""} onClick={() => { setActivePage("deadlines"); setMenuOpen(false); }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Deadlines{upcomingDeadlines.filter(d => getDueInfo(d.dueDate).color === "#ef4444").length > 0 && (<span className="nav-badge">{upcomingDeadlines.filter(d => getDueInfo(d.dueDate).color === "#ef4444").length}</span>)}</button>
-              <button className={activePage === "focus" ? "active" : ""} onClick={() => { setActivePage("focus"); setMenuOpen(false); }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Focus Mode</button>
-              <button className={activePage === "notes" ? "active" : ""} onClick={() => { setActivePage("notes"); setMenuOpen(false); }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Notes</button>
-              <button className={activePage === "achievements" ? "active" : ""} onClick={() => { setActivePage("achievements"); setMenuOpen(false); }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Badges</button>
-              <button className="dark-toggle" onClick={() => setDarkMode(!darkMode)}>{darkMode ? (<><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>Light Mode</>) : (<><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>Dark Mode</>)}</button>
-              <button className="logout-btn" onClick={handleLogout}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Log Out</button>
+              <button className={activePage === "dashboard" ? "active" : ""}
+                onClick={() => { setActivePage("dashboard"); setMenuOpen(false); }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                  <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+                </svg>Dashboard
+              </button>
+              <button className={activePage === "tasks" ? "active" : ""}
+                onClick={() => { setActivePage("tasks"); setMenuOpen(false); }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="9 11 12 14 22 4"/>
+                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                </svg>Task Manager
+              </button>
+              <button className={activePage === "schedule" ? "active" : ""}
+                onClick={() => { setActivePage("schedule"); setMenuOpen(false); }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>Schedule
+              </button>
+              <button className={activePage === "deadlines" ? "active" : ""}
+                onClick={() => { setActivePage("deadlines"); setMenuOpen(false); }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                  <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+                Deadlines
+                {upcomingDeadlines.filter(d => getDueInfo(d.dueDate).color === "#ef4444").length > 0 && (
+                  <span className="nav-badge">
+                    {upcomingDeadlines.filter(d => getDueInfo(d.dueDate).color === "#ef4444").length}
+                  </span>
+                )}
+              </button>
+              <button className={activePage === "focus" ? "active" : ""}
+                onClick={() => { setActivePage("focus"); setMenuOpen(false); }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>Focus Mode
+              </button>
+              <button className={activePage === "notes" ? "active" : ""}
+                onClick={() => { setActivePage("notes"); setMenuOpen(false); }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>Notes
+              </button>
+              <button className={activePage === "achievements" ? "active" : ""}
+                onClick={() => { setActivePage("achievements"); setMenuOpen(false); }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/>
+                </svg>Badges
+              </button>
+
+              <button className="dark-toggle" onClick={() => setDarkMode(!darkMode)}>
+                {darkMode ? (
+                  <><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="5"/>
+                    <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                    <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                  </svg>Light Mode</>
+                ) : (
+                  <><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                  </svg>Dark Mode</>
+                )}
+              </button>
+              <button className="logout-btn" onClick={handleLogout}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                  <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>Log Out
+              </button>
             </nav>
           </div>
-          <div className="progress-card"><p className="progress-label">TODAY'S PROGRESS</p><div className="progress-bar"><div className="progress-fill" style={{ width: `${progress}%` }}></div></div><small>{completedTasks} of {tasks.length} tasks completed</small></div>
+
+          <div className="progress-card">
+            <p className="progress-label">TODAY'S PROGRESS</p>
+            <div className="progress-bar">
+              <div className="progress-fill" style={{ width: `${progress}%` }}></div>
+            </div>
+            <small>{completedTasks} of {tasks.length} tasks completed</small>
+          </div>
         </aside>
+
         <main className="main-content">
           <div className="top-card">
             <div className="top-card-left">
-              <button className="hamburger-btn" onClick={() => setMenuOpen(true)}><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+              <button className="hamburger-btn" onClick={() => setMenuOpen(true)}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <line x1="3" y1="6" x2="21" y2="6"/>
+                  <line x1="3" y1="12" x2="21" y2="12"/>
+                  <line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+              </button>
               <h1>{greeting}, {firstName}! 👋</h1>
               <p>You have {weeklySchedule[today]?.length || 0} classes today, {tasks.filter((t) => !t.done).length} pending tasks and {upcomingDeadlines.length} upcoming deadlines.</p>
             </div>
-            <div className="top-card-right"><span className="focus-label">FOCUS TIMER</span><h2 className="top-timer">{String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}</h2><button className="start-focus-btn" onClick={startFocusSession}>{isRunning ? "Pause" : "Start Focus"}</button></div>
+            <div className="top-card-right">
+              <span className="focus-label">FOCUS TIMER</span>
+              <h2 className="top-timer">
+                {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
+              </h2>
+              <button className="start-focus-btn" onClick={startFocusSession}>
+                {isRunning ? "Pause" : "Start Focus"}
+              </button>
+            </div>
           </div>
           {renderPage()}
         </main>
+
       </div>
     </div>
   );
