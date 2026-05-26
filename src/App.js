@@ -227,12 +227,7 @@ function App() {
   const colorOptions = ["#7c5cff","#3b82f6","#10b981","#f59e0b","#ec4899","#ef4444","#14b8a6"];
 
   // ── Tasks ────────────────────────────────────────
-  const defaultTasks = [
-    { id: 1, text: "Read Chemistry Chapter 4", done: false },
-    { id: 2, text: "Draft Economics Essay Outline", done: false },
-    { id: 3, text: "Submit Lab Report Part 2", done: false, high: true },
-    { id: 4, text: "Review Calculus Notes", done: true },
-  ];
+  const defaultTasks = [];
   const [activePage, setActivePage] = useState("dashboard");
   const [tasks, setTasks] = useState(() => {
     const s = localStorage.getItem("studyTasks");
@@ -251,10 +246,7 @@ function App() {
   const [sessionStartTime, setSessionStartTime] = useState(null);
 
   // ── Deadlines ────────────────────────────────────
-  const defaultDeadlines = [
-    { id: 1, title: "History Term Paper", subject: "History", dueDate: new Date(Date.now() + 2 * 86400000).toISOString().split("T")[0], priority: "high", done: false, color: "#ef4444" },
-    { id: 2, title: "Math Quiz", subject: "Mathematics", dueDate: new Date(Date.now() + 5 * 86400000).toISOString().split("T")[0], priority: "medium", done: false, color: "#3b82f6" },
-  ];
+  const defaultDeadlines = [];
   const [deadlines, setDeadlines] = useState(() => {
     const s = localStorage.getItem("studyDeadlines");
     return s ? JSON.parse(s) : defaultDeadlines;
