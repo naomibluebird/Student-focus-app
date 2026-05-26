@@ -1148,54 +1148,7 @@ function App() {
               </div>
             </div>
 
-            {/* Gamification Strip */}
-            <div className="stats-strip">
-              <div className="stat-strip-card">
-                <div className="stat-strip-top">
-                  <span className="stat-strip-badge" style={{ background: levelInfo.color }}>
-                    Lv.{levelInfo.level}
-                  </span>
-                  <span className="stat-strip-title">{levelInfo.title}</span>
-                </div>
-                <div className="stat-strip-bar">
-                  <div style={{ width: `${levelInfo.progressPercent}%`, background: levelInfo.color }}></div>
-                </div>
-                <span className="stat-strip-sub">{xp} XP · {levelInfo.xpToNext > 0 ? `${levelInfo.xpToNext} to next` : "Max!"}</span>
-              </div>
-
-              <div className="stat-strip-card stat-strip-center">
-                <div className="stat-strip-big">🔥</div>
-                <div className="stat-strip-title">{streak} day streak</div>
-                <span className="stat-strip-sub">Keep it going!</span>
-              </div>
-
-              <div className="stat-strip-card">
-                <div className="stat-strip-top">
-                  <span className="stat-strip-emoji">🎯</span>
-                  <span className="stat-strip-title">Daily Challenge</span>
-                  {dailyChallenge.completed && <span className="challenge-done-badge">Done ✓</span>}
-                </div>
-                <p className="stat-strip-challenge-text">{dailyChallenge.text}</p>
-                <div className="stat-strip-bar">
-                  <div style={{
-                    width: `${Math.min((dailyChallenge.progress / dailyChallenge.requirement.count) * 100, 100)}%`,
-                    background: dailyChallenge.completed ? "#10b981" : "#7c5cff"
-                  }}></div>
-                </div>
-                <span className="stat-strip-sub">
-                  {dailyChallenge.progress}/{dailyChallenge.requirement.count} · +{dailyChallenge.reward} XP
-                </span>
-              </div>
-
-              <div className="stat-strip-card stat-strip-center"
-                style={{ cursor: "pointer" }}
-                onClick={() => setActivePage("achievements")}>
-                <div className="stat-strip-big">🏆</div>
-                <div className="stat-strip-title">{unlockedAchievements.length}/{ALL_ACHIEVEMENTS.length}</div>
-                <span className="stat-strip-sub">Badges earned</span>
-              </div>
-            </div>
-
+        
             {/* Dashboard grid */}
             <div className="main-grid">
               <div className="left-column">
