@@ -1134,11 +1134,10 @@ function App() {
           </div>
         );
 
-      default:
-      }
-    }
-  return (
-    <>
+           default:
+        return (
+          <>
+           
       {/* Quote */}
       <div className="quote-card">
         <svg className="quote-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -1270,10 +1269,13 @@ function App() {
           </div>
         </div>
       </div>
-    </>
-  );
+              </>
+        );
 
-    return (
+    }
+  };
+
+  return (
     <div className={`app ${darkMode ? "dark" : ""}`}>
       {showXpToast && (
         <div className="xp-toast">✨ +{showXpToast.amount} XP {showXpToast.reason}</div>
