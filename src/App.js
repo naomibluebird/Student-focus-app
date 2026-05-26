@@ -2,7 +2,21 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 
 /* eslint-disable react-hooks/exhaustive-deps */
+const APP_VERSION = "2.0"; // Increment this whenever you want to force a reset
 
+// In your App component, inside useState initializers:
+const [user, setUser] = useState(() => {
+  const s = localStorage.getItem("studyUser");
+  const storedVersion = localStorage.getItem("appVersion");
+  
+  if (storedVersion !== APP_VERSION) {
+    localStorage.clear();
+    localStorage.setItem("appVersion", APP_VERSION);
+    return null;
+  }
+  
+  return s ? JSON.parse(s) : null;
+});
 const QUOTES = [
   { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
   { text: "It always seems impossible until it's done.", author: "Nelson Mandela" },
@@ -442,7 +456,7 @@ function App() {
   const handleSignup = () => {
     if (!authName.trim()) { setAuthError("Please enter your name."); return; }
     if (!authEmail.includes("@")) { setAuthError("Please enter a valid email."); return; }
-    if (authPassword.length < 6) { setAuthError("Password must be at least 6 characters."); return; }
+    if (authPassword.length < 8) { setAuthError("Password must be at least 8 characters."); return; }
     const users = JSON.parse(localStorage.getItem("studyUsers") || "[]");
     if (users.find((u) => u.email.toLowerCase() === authEmail.toLowerCase())) {
       setAuthError("An account with this email already exists."); return;
@@ -1236,6 +1250,17 @@ function App() {
                   <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                 </svg>
               </button>
+              <button 
+  style={{ marginTop: '10px', fontSize: '11px', color: '#ef4444', background: 'transparent', border: 'none', cursor: 'pointer' }}
+  onClick={() => {
+    if (confirm('This will delete all your data. Are you sure?')) {
+      localStorage.clear();
+      window.location.reload();
+    }
+  }}
+>
+  🗑️ Reset All Data
+</button>
             </div>
 
             <div className="user-chip">
