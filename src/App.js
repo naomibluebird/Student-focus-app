@@ -2,21 +2,9 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 
 /* eslint-disable react-hooks/exhaustive-deps */
-const APP_VERSION = "2.0"; // Increment this whenever you want to force a reset
 
-// In your App component, inside useState initializers:
-const [user, setUser] = useState(() => {
-  const s = localStorage.getItem("studyUser");
-  const storedVersion = localStorage.getItem("appVersion");
-  
-  if (storedVersion !== APP_VERSION) {
-    localStorage.clear();
-    localStorage.setItem("appVersion", APP_VERSION);
-    return null;
-  }
-  
-  return s ? JSON.parse(s) : null;
-});
+const APP_VERSION = "2.0";
+
 const QUOTES = [
   { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
   { text: "It always seems impossible until it's done.", author: "Nelson Mandela" },
@@ -111,8 +99,17 @@ function App() {
   // ── Auth ─────────────────────────────────────────
   const [user, setUser] = useState(() => {
     const s = localStorage.getItem("studyUser");
+    const storedVersion = localStorage.getItem("appVersion");
+    
+    if (storedVersion !== APP_VERSION) {
+      localStorage.clear();
+      localStorage.setItem("appVersion", APP_VERSION);
+      return null;
+    }
+    
     return s ? JSON.parse(s) : null;
   });
+  
   const [authMode, setAuthMode] = useState("login");
   const [authName, setAuthName] = useState("");
   const [authEmail, setAuthEmail] = useState("");
@@ -1250,17 +1247,6 @@ function App() {
                   <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                 </svg>
               </button>
-              <button 
-  style={{ marginTop: '10px', fontSize: '11px', color: '#ef4444', background: 'transparent', border: 'none', cursor: 'pointer' }}
-  onClick={() => {
-    if (confirm('This will delete all your data. Are you sure?')) {
-      localStorage.clear();
-      window.location.reload();
-    }
-  }}
->
-  🗑️ Reset All Data
-</button>
             </div>
 
             <div className="user-chip">
@@ -1378,7 +1364,6 @@ function App() {
               </button>
             </nav>
           </div>
-
           <div className="progress-card">
             <p className="progress-label">TODAY'S PROGRESS</p>
             <div className="progress-bar">
